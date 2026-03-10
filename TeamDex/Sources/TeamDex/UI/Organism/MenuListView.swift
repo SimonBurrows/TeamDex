@@ -27,7 +27,7 @@ public struct MenuListView: View {
             List {
                 ForEach(filteredItems, id: \.self) { item in
                     NavigationLink {
-                        ProfileView(profile: PersonaProvider().persona(fromSeed: item))
+                        ProfileView(profile: PersonaProvider().persona(fromSeed: item)).detailBackground()
                     } label: {
                         PersonaSpriteLabelView(
                             text: item
