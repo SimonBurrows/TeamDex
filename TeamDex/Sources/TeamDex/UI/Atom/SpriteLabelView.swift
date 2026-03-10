@@ -42,9 +42,13 @@ public struct SpriteLabelView: View {
     }
 }
 
+extension SpriteLabelView {
+    static let defaultSpriteUrl: URL? = URL(string: "https://play.pokemonshowdown.com/sprites/trainers/ash.png")
+}
+
 #Preview {
     SpriteLabelView(
         text: "Some lovely text",
-        spriteUrl: URL(string: "https://play.pokemonshowdown.com/sprites/trainers/ash.png")
+        spriteUrl: SpriteLabelView.defaultSpriteUrl
     )
 }

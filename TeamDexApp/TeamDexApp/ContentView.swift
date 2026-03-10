@@ -11,9 +11,16 @@ import TeamDex
 struct ContentView: View {
     var body: some View {
         VStack {
-            SpriteLabelView(text: "Simon", spriteUrl: URL(string: "https://play.pokemonshowdown.com/sprites/trainers/ash.png"))
+            MenuListView(items: [
+                "Simon",
+                "Kevin",
+                "Gabby",
+                "Paul",
+                "Carl",
+                "Nick"
+            ])
+            .padding()
         }
-        .padding()
     }
 }
 
