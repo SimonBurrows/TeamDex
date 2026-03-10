@@ -27,14 +27,10 @@ public struct MenuListView: View {
             List {
                 ForEach(filteredItems, id: \.self) { item in
                     NavigationLink {
-                        SpriteLabelView(
-                            text: item,
-                            spriteUrl: SpriteLabelView.defaultSpriteUrl
-                        )
+                        ProfileView(profile: PersonaProvider().persona(fromSeed: item))
                     } label: {
-                        SpriteLabelView(
-                            text: item,
-                            spriteUrl: SpriteLabelView.defaultSpriteUrl
+                        PersonaSpriteLabelView(
+                            text: item
                         )
                     }
                 }
