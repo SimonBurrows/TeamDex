@@ -7,11 +7,6 @@
 
 import Foundation
 
-public protocol ProfileFetcherProtocol: Sendable {
-    func fetchProfile(withId profileId: String) async -> Result<Profile, FetchError>
-}
-
-
 struct ProfileFetcher: ProfileFetcherProtocol {
     private let session: URLSession
     private let decoder: JSONDecoder

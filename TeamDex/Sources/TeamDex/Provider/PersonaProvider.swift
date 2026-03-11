@@ -10,6 +10,14 @@ public struct PersonaProvider: ProfileProviderProtocol {
         Self.data.item(fromSeed: "default")
     }
     
+    public func profile(withId profileId: String) -> Result<Profile, FetchError> {
+        guard let profile = Self.data.first(where: { $0.artworkId == profileId }) else {
+            return .failure(.unknown)
+        }
+        
+        return .success(profile)
+    }
+    
     public func profile(fromSeed seed: String) -> Profile {
         Self.data.item(fromSeed: seed)
     }
