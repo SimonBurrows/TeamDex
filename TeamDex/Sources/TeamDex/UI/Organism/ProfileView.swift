@@ -17,7 +17,7 @@ struct ProfileView: View {
                 // Title
                 Text(profile.name.capitalized)
                 // TODO move fonts to theme
-                    .font(.custom("ketchum", size: 36))
+                    .font(PackageFont.ketchum.font(size: 36))
                     .foregroundStyle(.black)
                     .padding(.top, 16)
 
@@ -65,7 +65,7 @@ struct DialogBox: View {
 
             // Text
             Text(text)
-                .font(.custom("Pokemon Classic", size: 12))
+                .font(PackageFont.pokemonClasic.font(size: 12))
                 .font(.system(size: 18, weight: .semibold, design: .monospaced)) // “gamey” without custom fonts
                 .foregroundStyle(Color.black.opacity(0.9))
                 .lineSpacing(3)
