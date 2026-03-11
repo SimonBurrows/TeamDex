@@ -20,36 +20,30 @@ struct ProfileFetcher: ProfileFetcherProtocol {
     private let decoder: JSONDecoder
     
     public func fetchProfile(forSeed seed: String) async -> Result<Profile, FetchError> {
-        let profileId = Int.fromSeed(seed, in: Self.pokemonRange)
+        let profileId = String(Int.fromSeed(seed, in: Self.pokemonRange))
         
         
         let profileResolver = ProfileResolver(
             // TODO tidy urls
             name: .init(
-                url: URL(
-                    string: "https://pokeapi.co/api/v2/pokemon-species/\(profileId)"
-                )!,
+                urlTemplate: "https://pokeapi.co/api/v2/pokemon-species/%@",
                 path: "name"
             ),
             bio: .init(
-                url: URL(
-                    string: "https://pokeapi.co/api/v2/pokemon-species/\(profileId)"
-                )!,
+                urlTemplate: "https://pokeapi.co/api/v2/pokemon-species/%@",
                 path: "flavor_text_entries.0.flavor_text"
             ),
             artworkUrl: .init(
-                url: URL(
-                    string: "https://pokeapi.co/api/v2/pokemon/\(profileId)"
-                )!,
+                urlTemplate: "https://pokeapi.co/api/v2/pokemon/%@",
                 path: "sprites.other.official-artwork.front_default"
             )
         )
         
         do {
             let profile = await DynamicProfile(
-                name: try stringValue(fromResolverEntry: profileResolver.name),
-                artworkUrl: try URL(string: stringValue(fromResolverEntry: profileResolver.artworkUrl)),
-                bio: try stringValue(fromResolverEntry: profileResolver.bio)
+                name: try stringValue(fromResolverEntry: profileResolver.name, profileId: profileId),
+                artworkUrl: try URL(string: stringValue(fromResolverEntry: profileResolver.artworkUrl, profileId: profileId)),
+                bio: try stringValue(fromResolverEntry: profileResolver.bio, profileId: profileId)
             )
             
             return .success(profile)
@@ -94,8 +88,11 @@ struct ProfileFetcher: ProfileFetcherProtocol {
         }
     }
 
-    func stringValue(fromResolverEntry entry: ProfileResolver.Entry) async throws -> String {
-        async let data = fetchData(from: entry.url)
+    func stringValue(fromResolverEntry entry: ProfileResolver.Entry, profileId: String) async throws -> String {
+        guard let url = URL(string: String(format: entry.urlTemplate, profileId)) else {
+            throw FetchError.urlError
+        }
+        async let data = fetchData(from: url)
         
         return try await decodeJSON(from: data).value(
             at: entry.path
@@ -119,7 +116,7 @@ struct ProfileResolver {
     let artworkUrl: Entry
     
     struct Entry {
-        let url: URL
+        let urlTemplate: String
         let path: String
     }
 }
