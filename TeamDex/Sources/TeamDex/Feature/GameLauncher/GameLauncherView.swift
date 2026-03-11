@@ -99,7 +99,8 @@ name: "Something ace",
                 "Carl",
                 "Nick"
             ],
-            profileIds: ["misty", "ash"],
+            // TODO this is brittle: change this
+            profileIds: (0...1).map(String.init),
             senarios: [
                 Senario(
                     title: "Sharing what we do",

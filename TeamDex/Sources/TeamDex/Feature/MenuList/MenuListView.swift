@@ -46,13 +46,14 @@ public struct MenuListView: View {
                 
                 Section {
                     ForEach(filteredItems, id: \.self) { player in
-                        // TODO sort sprite
-//                        let profile = profileProvider.profile(fromSeed: item)
                         NavigationLink {
-                            ProfileLoaderView(profileFetcher: profileFetcher, profileId: profileIds.item(fromSeed: player)).detailBackground()
+                            GamePlayView(
+                                profileFetcher: profileFetcher, player: player,
+                                profileId: profileIds.item(fromSeed: player),
+                                senarios: senarios
+                            )
+                                .detailBackground()
                         } label: {
-                            // TODO sort sprites
-//                            SpriteLabelView(text: player, spriteUrl: nil)
                             PokeballLabelView(labelText: player)
                         }
                     }

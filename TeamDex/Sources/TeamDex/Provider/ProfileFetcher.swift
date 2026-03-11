@@ -68,7 +68,7 @@ struct ProfileFetcher: ProfileFetcherProtocol {
             return try decodeJSON(from: data).value(
                 // TODO tidy up logic here!
                 // Note, - is hardcoded but needs to be passed in
-                at: "0.\(entry.path)"
+                at: "\(profileId).\(entry.path)"
             )?.stringValue ?? ""
         case .api(urlTemplate: let urlTemplate):
             guard let url = URL(string: String(format: urlTemplate, profileId)) else {
