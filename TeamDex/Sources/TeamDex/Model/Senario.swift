@@ -5,7 +5,7 @@
 //  Created by Simon Burrows on 11/03/2026.
 //
 
-public struct Senario {
+public struct Senario: Equatable {
     let title: String
     let text: String
     

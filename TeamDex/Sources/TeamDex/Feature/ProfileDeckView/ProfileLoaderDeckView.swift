@@ -29,6 +29,11 @@ public struct ProfileLoaderDeckView: View {
         self.profileIds = profileIds
         self.profileFetcher = profileFetcher
     }
+    
+    public init(staticProfiles: [Profile], profileFetcher: ProfileFetcherProtocol) {
+        self.profileIds = staticProfiles.map { $0.name }
+        self.profileFetcher = profileFetcher
+    }
 }
 
 #Preview {

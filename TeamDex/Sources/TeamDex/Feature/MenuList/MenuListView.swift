@@ -10,7 +10,7 @@ import SwiftUI
 public struct MenuListView: View {
     @State private var searchText = ""
     
-    let profileProvider: ProfileProviderProtocol
+    let profileProvider: any ProfileProviderProtocol
     let players: [String]
     let senarios: [Senario]
     

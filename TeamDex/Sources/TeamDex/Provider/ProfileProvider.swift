@@ -5,7 +5,7 @@
 //  Created by Simon Burrows on 11/03/2026.
 //
 
-public protocol ProfileProviderProtocol: Sendable {
+public protocol ProfileProviderProtocol: Sendable, Equatable {
     func defaultProfile() -> Profile
     func profile(fromSeed seed: String) -> Profile
     func profile(withId profileId: String) -> Result<Profile, FetchError>
