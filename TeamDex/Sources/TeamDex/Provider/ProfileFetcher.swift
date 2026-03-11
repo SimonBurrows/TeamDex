@@ -13,6 +13,7 @@ protocol ProfileFetcherProtocol: Sendable {
 
 
 struct ProfileFetcher: ProfileFetcherProtocol {
+    // TODO undo force unwraps
     // TODO remove this
     private static let pokemonRange = 1...150
     private let session: URLSession
@@ -22,58 +23,40 @@ struct ProfileFetcher: ProfileFetcherProtocol {
         let profileId = Int.fromSeed(seed, in: Self.pokemonRange)
         
         
-        let profileEntries = ProfileEntries(
+        let profileResolver = ProfileResolver(
             // TODO tidy urls
-            name: Entry(
-                urlString: "https://pokeapi.co/api/v2/pokemon-species/\(profileId)",
-                path: "name"),
-            bio: Entry(
-                urlString: "https://pokeapi.co/api/v2/pokemon-species/\(profileId)",
-                path: "flavor_text_entries.0.flavor_text"),
-            artworkUrl: Entry(
-                urlString: "https://pokeapi.co/api/v2/pokemon/\(profileId)",
-                path: "sprites.other.official-artwork.front_default")
+            name: .init(
+                url: URL(
+                    string: "https://pokeapi.co/api/v2/pokemon-species/\(profileId)"
+                )!,
+                path: "name"
+            ),
+            bio: .init(
+                url: URL(
+                    string: "https://pokeapi.co/api/v2/pokemon-species/\(profileId)"
+                )!,
+                path: "flavor_text_entries.0.flavor_text"
+            ),
+            artworkUrl: .init(
+                url: URL(
+                    string: "https://pokeapi.co/api/v2/pokemon/\(profileId)"
+                )!,
+                path: "sprites.other.official-artwork.front_default"
+            )
         )
         
-        
-        guard let nameUrl = URL(string: profileEntries.name.urlString) else {
-            return .failure(.urlError)
-        }
-        
-        guard let bioUrl = URL(string: profileEntries.bio.urlString) else {
-            return .failure(.urlError)
-        }
-        
-        guard let artworkUrlUrl = URL(string: profileEntries.artworkUrl.urlString) else {
-            return .failure(.urlError)
-        }
-        
-        guard let (dataForName, _) = try? await URLSession.shared.data(from: nameUrl) else {
+        do {
+            let profile = await DynamicProfile(
+                name: try stringValue(fromResolverEntry: profileResolver.name),
+                artworkUrl: try URL(string: stringValue(fromResolverEntry: profileResolver.artworkUrl)),
+                bio: try stringValue(fromResolverEntry: profileResolver.bio)
+            )
+            
+            return .success(profile)
+            
+        } catch {
             return .failure(.decodeError)
         }
-        
-        guard let (dataForBio, _) = try? await URLSession.shared.data(from: bioUrl) else {
-            return .failure(.decodeError)
-        }
-        
-        guard let (dataForArtworkUrl, _) = try? await URLSession.shared.data(from: artworkUrlUrl) else {
-            return .failure(.decodeError)
-        }
-        
-        let jsonForName = try? decoder.decode(JSONValue.self, from: dataForName)
-        let name = jsonForName?.value(at: profileEntries.name.path)!.stringValue
-        
-        let jsonForBio = try? decoder.decode(JSONValue.self, from: dataForBio)
-        let bio = jsonForBio?.value(at: profileEntries.bio.path)!.stringValue
-        
-        let jsonForArtworkUrl = try? decoder.decode(JSONValue.self, from: dataForArtworkUrl)
-        let artworkUrlString = jsonForArtworkUrl?.value(at: profileEntries.artworkUrl.path)?.stringValue
-        let artworkUrl = URL(string: artworkUrlString ?? "")
-        
-        // TODO tidy force unwaraps in this file
-        let profile = DynamicProfile(name: name!, artworkUrl: artworkUrl, bio: bio!)
-        
-        return .success(profile)
     }
     
     
@@ -89,20 +72,35 @@ struct ProfileFetcher: ProfileFetcherProtocol {
     }
     
     func fetchData(from url: URL) async throws -> Data {
-            do {
-                let (data, response) = try await session.data(from: url)
+        do {
+            let (data, response) = try await session.data(from: url)
 
-                guard let httpResponse = response as? HTTPURLResponse,
-                      200..<300 ~= httpResponse.statusCode else {
-                    throw FetchError.decodeError
-                }
-
-                return data
-            } catch {
+            guard let httpResponse = response as? HTTPURLResponse,
+                  200..<300 ~= httpResponse.statusCode else {
                 throw FetchError.decodeError
             }
-        }
 
+            return data
+        } catch {
+            throw FetchError.decodeError
+        }
+    }
+
+    func decodeJSON(from data: Data) throws -> JSONValue {
+        do {
+            return try decoder.decode(JSONValue.self, from: data)
+        } catch {
+            throw FetchError.decodeError
+        }
+    }
+
+    func stringValue(fromResolverEntry entry: ProfileResolver.Entry) async throws -> String {
+        async let data = fetchData(from: entry.url)
+        
+        return try await decodeJSON(from: data).value(
+            at: entry.path
+        )?.stringValue ?? ""
+    }
     
 
     init(
@@ -114,14 +112,14 @@ struct ProfileFetcher: ProfileFetcherProtocol {
     }
 }
 
-// TODO rename
-fileprivate struct Entry {
-    let urlString: String
-    let path: String
-}
 
-fileprivate struct ProfileEntries{
+struct ProfileResolver {
     let name: Entry
     let bio: Entry
     let artworkUrl: Entry
+    
+    struct Entry {
+        let url: URL
+        let path: String
+    }
 }
