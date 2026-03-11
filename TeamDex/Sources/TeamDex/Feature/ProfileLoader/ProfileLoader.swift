@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ProfileLoaderView: View {
     let ProfileFetcher: ProfileFetcherProtocol
+    let profileId: String
     @StateObject private var viewModel: ViewModel
     
     var body: some View {
@@ -17,12 +18,10 @@ struct ProfileLoaderView: View {
                 
                 switch viewModel.state {
                 case .loading:
-                    // TODO tidy
-                    Text("Loading")
+                    ProgressView()
                 case .ready(let profile):
                     ProfileView(profile: profile)
                 case .failed:
-                    // TODO tidy
                     Text("Error")
                 }
                 
@@ -30,12 +29,12 @@ struct ProfileLoaderView: View {
         }
         
         .task {
-            // TODO remove hard coded
-            await viewModel.loadData(seed: "Simon")
+            await viewModel.loadData(withId: profileId)
         }
     }
     
-    init(profileFetcher: ProfileFetcherProtocol) {
+    init(profileFetcher: ProfileFetcherProtocol, profileId: String) {
+        self.profileId = profileId
         self.ProfileFetcher = profileFetcher
         _viewModel = StateObject(
             wrappedValue: ViewModel(profileFetcher: profileFetcher)
@@ -54,23 +53,24 @@ extension ProfileLoaderView {
 
 #Preview {
     let profileResolver = ProfileResolver(
-                // TODO tidy urls
-                name: .init(
-                    urlTemplate: "https://pokeapi.co/api/v2/pokemon-species/%@",
-                    path: "name"
-                ),
-                bio: .init(
-                    urlTemplate: "https://pokeapi.co/api/v2/pokemon-species/%@",
-                    path: "flavor_text_entries.0.flavor_text"
-                ),
-                artworkUrl: .init(
-                    urlTemplate: "https://pokeapi.co/api/v2/pokemon/%@",
-                    path: "sprites.other.official-artwork.front_default"
-                )
-            )
-    
-    let profileIds = (1...150).map(String.init)
+        name: .init(
+            urlTemplate: "https://pokeapi.co/api/v2/pokemon-species/%@",
+            path: "name"
+        ),
+        bio: .init(
+            urlTemplate: "https://pokeapi.co/api/v2/pokemon-species/%@",
+            path: "flavor_text_entries.0.flavor_text"
+        ),
+        artworkUrl: .init(
+            urlTemplate: "https://pokeapi.co/api/v2/pokemon/%@",
+            path: "sprites.other.official-artwork.front_default"
+        )
+    )
+
     
     
-    ProfileLoaderView(profileFetcher: ProfileFetcher(profileResolver: profileResolver, profileIds: profileIds))
+    ProfileLoaderView(
+        profileFetcher: ProfileFetcher(profileResolver: profileResolver),
+        profileId: "3"
+    )
 }

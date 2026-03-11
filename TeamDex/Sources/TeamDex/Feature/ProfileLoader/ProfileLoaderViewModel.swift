@@ -17,8 +17,8 @@ extension ProfileLoaderView {
         }
         
         
-        func loadData(seed: String) async {
-            let profileResult = await profileFetcher.fetchProfile(forSeed: seed)
+        func loadData(withId profileId: String) async {
+            let profileResult = await profileFetcher.fetchProfile(withId: profileId)
             
             switch profileResult {
             case .success(let profile):

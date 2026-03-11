@@ -7,8 +7,8 @@
 
 import Foundation
 
-protocol ProfileFetcherProtocol: Sendable {
-    func fetchProfile(forSeed seed: String) async -> Result<Profile, FetchError>
+public protocol ProfileFetcherProtocol: Sendable {
+    func fetchProfile(withId profileId: String) async -> Result<Profile, FetchError>
 }
 
 
@@ -16,11 +16,8 @@ struct ProfileFetcher: ProfileFetcherProtocol {
     private let session: URLSession
     private let decoder: JSONDecoder
     private let profileResolver: ProfileResolver
-    private let profileIds: [String]
     
-    public func fetchProfile(forSeed seed: String) async -> Result<Profile, FetchError> {
-        let profileId = profileIds.item(fromSeed: seed)
-        
+    public func fetchProfile(withId profileId: String) async -> Result<any Profile, FetchError> {
         do {
             let profile = await DynamicProfile(
                 name: try stringValue(fromResolverEntry: profileResolver.name, profileId: profileId),
@@ -85,13 +82,11 @@ struct ProfileFetcher: ProfileFetcherProtocol {
     init(
         session: URLSession = .shared,
         decoder: JSONDecoder = JSONDecoder(),
-        profileResolver: ProfileResolver,
-        profileIds: [String]
+        profileResolver: ProfileResolver
     ) {
         self.session = session
         self.decoder = decoder
         self.profileResolver = profileResolver
-        self.profileIds = profileIds
     }
 }
 

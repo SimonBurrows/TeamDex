@@ -38,7 +38,7 @@ struct ProfileView: View {
                 Spacer()
 
                 // Dialogue box
-                DialogBox(text: profile.bio)
+                DialogBox(text: profile.bio.cleanBioText())
                     .padding(.horizontal, 20)
                     .padding(.bottom, 24)
             }
