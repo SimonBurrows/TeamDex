@@ -53,5 +53,24 @@ extension ProfileLoaderView {
 }
 
 #Preview {
-    ProfileLoaderView(profileFetcher: ProfileFetcher())
+    let profileResolver = ProfileResolver(
+                // TODO tidy urls
+                name: .init(
+                    urlTemplate: "https://pokeapi.co/api/v2/pokemon-species/%@",
+                    path: "name"
+                ),
+                bio: .init(
+                    urlTemplate: "https://pokeapi.co/api/v2/pokemon-species/%@",
+                    path: "flavor_text_entries.0.flavor_text"
+                ),
+                artworkUrl: .init(
+                    urlTemplate: "https://pokeapi.co/api/v2/pokemon/%@",
+                    path: "sprites.other.official-artwork.front_default"
+                )
+            )
+    
+    let profileIds = (1...150).map(String.init)
+    
+    
+    ProfileLoaderView(profileFetcher: ProfileFetcher(profileResolver: profileResolver, profileIds: profileIds))
 }

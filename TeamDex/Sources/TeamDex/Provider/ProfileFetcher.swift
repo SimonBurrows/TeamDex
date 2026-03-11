@@ -13,31 +13,13 @@ protocol ProfileFetcherProtocol: Sendable {
 
 
 struct ProfileFetcher: ProfileFetcherProtocol {
-    // TODO undo force unwraps
-    // TODO remove this
-    private static let pokemonRange = 1...150
     private let session: URLSession
     private let decoder: JSONDecoder
+    private let profileResolver: ProfileResolver
+    private let profileIds: [String]
     
     public func fetchProfile(forSeed seed: String) async -> Result<Profile, FetchError> {
-        let profileId = String(Int.fromSeed(seed, in: Self.pokemonRange))
-        
-        
-        let profileResolver = ProfileResolver(
-            // TODO tidy urls
-            name: .init(
-                urlTemplate: "https://pokeapi.co/api/v2/pokemon-species/%@",
-                path: "name"
-            ),
-            bio: .init(
-                urlTemplate: "https://pokeapi.co/api/v2/pokemon-species/%@",
-                path: "flavor_text_entries.0.flavor_text"
-            ),
-            artworkUrl: .init(
-                urlTemplate: "https://pokeapi.co/api/v2/pokemon/%@",
-                path: "sprites.other.official-artwork.front_default"
-            )
-        )
+        let profileId = profileIds.item(fromSeed: seed)
         
         do {
             let profile = await DynamicProfile(
@@ -102,10 +84,14 @@ struct ProfileFetcher: ProfileFetcherProtocol {
 
     init(
         session: URLSession = .shared,
-        decoder: JSONDecoder = JSONDecoder()
+        decoder: JSONDecoder = JSONDecoder(),
+        profileResolver: ProfileResolver,
+        profileIds: [String]
     ) {
         self.session = session
         self.decoder = decoder
+        self.profileResolver = profileResolver
+        self.profileIds = profileIds
     }
 }
 
