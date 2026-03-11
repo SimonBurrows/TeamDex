@@ -12,6 +12,7 @@ public struct MenuListView: View {
     
     let profileProvider: ProfileProviderProtocol
     let players: [String]
+    let senarios: [Senario]
     
     var filteredItems: [String] {
         if searchText.isEmpty {
@@ -30,6 +31,11 @@ public struct MenuListView: View {
                     ProfileDeckView(profileProvider: profileProvider)
                 } label: {
                     SpriteLabelView(text: "All characters", spriteUrl: profileProvider.defaultProfile().artworkUrl)
+                }
+                NavigationLink {
+                    SenarioDeckView(senarios: senarios)
+                } label: {
+                    SpriteLabelView(text: "All senarios", spriteUrl: profileProvider.profile(fromSeed: "All senarios").artworkUrl)
                 }
                 
                 Section {
@@ -50,21 +56,26 @@ public struct MenuListView: View {
         }
     }
     
-    public init(players: [String], profileProvider: ProfileProviderProtocol) {
+    public init(players: [String], profileProvider: ProfileProviderProtocol, senarios: [Senario]) {
         self.players = players
         self.profileProvider = profileProvider
+        self.senarios = senarios
     }
 }
 
 #Preview {
-    MenuListView(players:  [
-        "Simon",
-        "Kevin",
-        "Gabby",
-        "Paul",
-        "Carl",
-        "Nick"
-    ],
-    profileProvider: PersonaProvider()
+    MenuListView(
+        players:  [
+            "Simon",
+            "Kevin",
+            "Gabby",
+            "Paul",
+            "Carl",
+            "Nick"
+        ],
+        profileProvider: PersonaProvider(),
+        senarios: [
+            Senario(title: "Wow!", text: "This is a senario")
+        ]
     )
 }
