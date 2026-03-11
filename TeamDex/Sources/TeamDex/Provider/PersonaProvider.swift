@@ -5,14 +5,12 @@
 //  Created by Simon Burrows on 10/03/2026.
 //
 
-protocol PersonaProviderProtocol {
-    func persona(fromSeed seed: String) -> Persona
-}
-
-struct PersonaProvider: PersonaProviderProtocol {
-    func persona(fromSeed seed: String) -> Persona {
+public struct PersonaProvider: ProfileProviderProtocol {
+    public func profile(fromSeed seed: String) -> Profile {
         Self.data.item(fromSeed: seed)
     }
+    
+    public init() {}
 }
 
 

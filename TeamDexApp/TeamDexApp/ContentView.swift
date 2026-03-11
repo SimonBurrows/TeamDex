@@ -18,7 +18,9 @@ struct ContentView: View {
                 "Paul",
                 "Carl",
                 "Nick"
-            ])
+            ],
+                         profileProvider: PersonaProvider()
+            )
         }
     }
 }

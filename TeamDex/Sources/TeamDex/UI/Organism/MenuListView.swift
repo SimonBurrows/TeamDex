@@ -10,6 +10,7 @@ import SwiftUI
 public struct MenuListView: View {
     @State private var searchText = ""
     
+    let profileProvider: ProfileProviderProtocol
     let items: [String]
     
     var filteredItems: [String] {
@@ -26,11 +27,13 @@ public struct MenuListView: View {
         NavigationStack {
             List {
                 ForEach(filteredItems, id: \.self) { item in
+                    let profile = profileProvider.profile(fromSeed: item)
                     NavigationLink {
-                        ProfileView(profile: PersonaProvider().persona(fromSeed: item)).detailBackground()
+                        ProfileView(profile: profile).detailBackground()
                     } label: {
-                        PersonaSpriteLabelView(
-                            text: item
+                        ProfileSpriteLabelView(
+                            text: item,
+                            profile: profile
                         )
                     }
                 }
@@ -39,8 +42,9 @@ public struct MenuListView: View {
         }
     }
     
-    public init(items: [String]) {
+    public init(items: [String], profileProvider: ProfileProviderProtocol) {
         self.items = items
+        self.profileProvider = profileProvider
     }
 }
 
@@ -52,5 +56,7 @@ public struct MenuListView: View {
         "Paul",
         "Carl",
         "Nick"
-    ])
+    ],
+    profileProvider: PersonaProvider()
+    )
 }
