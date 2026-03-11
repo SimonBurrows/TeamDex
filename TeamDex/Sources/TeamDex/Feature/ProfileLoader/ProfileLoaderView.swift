@@ -54,15 +54,15 @@ extension ProfileLoaderView {
 #Preview {
     let profileResolver = ProfileResolver(
         name: .init(
-            urlTemplate: "https://pokeapi.co/api/v2/pokemon-species/%@",
+            source: .api(urlTemplate: "https://pokeapi.co/api/v2/pokemon-species/%@"),
             path: "name"
         ),
         bio: .init(
-            urlTemplate: "https://pokeapi.co/api/v2/pokemon-species/%@",
+            source: .api(urlTemplate: "https://pokeapi.co/api/v2/pokemon-species/%@"),
             path: "flavor_text_entries.0.flavor_text"
         ),
         artworkUrl: .init(
-            urlTemplate: "https://pokeapi.co/api/v2/pokemon/%@",
+            source: .api(urlTemplate: "https://pokeapi.co/api/v2/pokemon/%@"),
             path: "sprites.other.official-artwork.front_default"
         )
     )

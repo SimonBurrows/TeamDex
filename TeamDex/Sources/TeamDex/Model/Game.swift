@@ -9,6 +9,7 @@
 struct Game {
     let name: String
     let players: [String]
+    let profileIds: [String]
     let senarios: [Senario]
-    let profileProvider: any ProfileProviderProtocol
+    let profileResolver: ProfileResolver
 }

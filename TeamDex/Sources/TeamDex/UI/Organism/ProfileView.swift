@@ -45,12 +45,12 @@ struct ProfileView: View {
         }
     }
 }
-
-#Preview {
-    ProfileView(profile: Persona(
-        artworkId: "misty",
-        name: "Misty",
-        bio: "I'm a backend engineer writing shared BFF modules for mobile experience teams. I need to know about the data spec for analytics used by the apps and their backends."
-    ))
-}
-
+//
+//#Preview {
+//    ProfileView(profile: Persona(
+//        artworkId: "misty",
+//        name: "Misty",
+//        bio: "I'm a backend engineer writing shared BFF modules for mobile experience teams. I need to know about the data spec for analytics used by the apps and their backends."
+//    ))
+//}
+//

@@ -9,10 +9,10 @@ import SwiftUI
 
 public struct MenuListView: View {
     @State private var searchText = ""
-    
-    let profileProvider: any ProfileProviderProtocol
+    let profileFetcher: ProfileFetcherProtocol
     let players: [String]
     let senarios: [Senario]
+    let profileIds: [String]
     
     var filteredItems: [String] {
         if searchText.isEmpty {
@@ -28,26 +28,32 @@ public struct MenuListView: View {
         NavigationStack {
             List {
                 NavigationLink {
-                    ProfileDeckView(profileProvider: profileProvider)
+                    // TODO fix hardcoded
+                    ProfileLoaderDeckView(profileIds: profileIds, profileFetcher: profileFetcher)
                 } label: {
-                    SpriteLabelView(text: "All characters", spriteUrl: profileProvider.defaultProfile().artworkUrl)
+                    // TODO sort sprite
+//                    SpriteLabelView(text: "All characters", spriteUrl: nil)
+//                        spriteUrl: profileProvider.defaultProfile().artworkUrl
+                    PokeballLabelView(labelText: "All characters")
                 }
                 NavigationLink {
                     SenarioDeckView(senarios: senarios)
                 } label: {
-                    SpriteLabelView(text: "All senarios", spriteUrl: profileProvider.profile(fromSeed: "All senarios").artworkUrl)
+                    // TODO sort default
+//                    SpriteLabelView(text: "All senarios", spriteUrl: nil)
+                    PokeballLabelView(labelText: "All senarios")
                 }
                 
                 Section {
-                    ForEach(filteredItems, id: \.self) { item in
-                        let profile = profileProvider.profile(fromSeed: item)
+                    ForEach(filteredItems, id: \.self) { player in
+                        // TODO sort sprite
+//                        let profile = profileProvider.profile(fromSeed: item)
                         NavigationLink {
-                            ProfileView(profile: profile).detailBackground()
+                            ProfileLoaderView(profileFetcher: profileFetcher, profileId: profileIds.item(fromSeed: player)).detailBackground()
                         } label: {
-                            ProfileSpriteLabelView(
-                                text: item,
-                                profile: profile
-                            )
+                            // TODO sort sprites
+//                            SpriteLabelView(text: player, spriteUrl: nil)
+                            PokeballLabelView(labelText: player)
                         }
                     }
                 }
@@ -56,26 +62,10 @@ public struct MenuListView: View {
         }
     }
     
-    public init(players: [String], profileProvider: ProfileProviderProtocol, senarios: [Senario]) {
+    public init(players: [String], profileResolver: ProfileResolver, profileIds: [String], senarios: [Senario]) {
         self.players = players
-        self.profileProvider = profileProvider
         self.senarios = senarios
+        profileFetcher = ProfileFetcher(profileResolver: profileResolver)
+        self.profileIds = profileIds
     }
-}
-
-#Preview {
-    MenuListView(
-        players:  [
-            "Simon",
-            "Kevin",
-            "Gabby",
-            "Paul",
-            "Carl",
-            "Nick"
-        ],
-        profileProvider: PersonaProvider(),
-        senarios: [
-            Senario(title: "Wow!", text: "This is a senario")
-        ]
-    )
 }

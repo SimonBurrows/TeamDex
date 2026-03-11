@@ -14,3 +14,16 @@ struct ProfileSpriteLabelView: View  {
         SpriteLabelView(text: text, spriteUrl: profile.artworkUrl)
     }
 }
+
+// TODO remove pokemon reference from here
+struct PokeballLabelView: View {
+    let labelText: String
+    
+    var body: some View {
+        SpriteLabelView(text: labelText, spriteUrl: PokeballSprite.data.item(fromSeed: labelText).imageUrl)
+    }
+}
+
+#Preview {
+    PokeballLabelView(labelText: "example@example.com")
+}

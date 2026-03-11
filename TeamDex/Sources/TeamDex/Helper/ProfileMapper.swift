@@ -100,7 +100,7 @@ public extension JSONValue {
 }
 
 // TODO why is this needed
-public struct DynamicProfile: Profile, Sendable, Hashable {
+public struct DynamicProfile: Profile, Sendable, Hashable, Codable {
     public let name: String
     public let artworkUrl: URL?
     public let bio: String

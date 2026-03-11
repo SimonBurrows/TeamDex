@@ -63,14 +63,23 @@ struct ProfileFetcher: ProfileFetcherProtocol {
     }
 
     func stringValue(fromResolverEntry entry: ProfileResolver.Entry, profileId: String) async throws -> String {
-        guard let url = URL(string: String(format: entry.urlTemplate, profileId)) else {
-            throw FetchError.urlError
+        switch entry.source {
+        case .local(data: let data):
+            return try decodeJSON(from: data).value(
+                // TODO tidy up logic here!
+                // Note, - is hardcoded but needs to be passed in
+                at: "0.\(entry.path)"
+            )?.stringValue ?? ""
+        case .api(urlTemplate: let urlTemplate):
+            guard let url = URL(string: String(format: urlTemplate, profileId)) else {
+                throw FetchError.urlError
+            }
+            async let data = fetchData(from: url)
+            
+            return try await decodeJSON(from: data).value(
+                at: entry.path
+            )?.stringValue ?? ""
         }
-        async let data = fetchData(from: url)
-        
-        return try await decodeJSON(from: data).value(
-            at: entry.path
-        )?.stringValue ?? ""
     }
     
 
@@ -86,13 +95,18 @@ struct ProfileFetcher: ProfileFetcherProtocol {
 }
 
 
-struct ProfileResolver {
+public struct ProfileResolver: Sendable {
     let name: Entry
     let bio: Entry
     let artworkUrl: Entry
     
     struct Entry {
-        let urlTemplate: String
+        let source: Source
         let path: String
+    }
+    
+    enum Source {
+        case local(data: Data)
+        case api(urlTemplate: String)
     }
 }
