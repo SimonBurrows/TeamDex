@@ -36,19 +36,31 @@ public struct SpriteLabelView: View {
         }
     }
     
-    public init(text: String, spriteUrl: URL?) {
+    public init(text: String, spriteUrlString: String? = nil) {
         self.text = text
-        self.spriteUrl = spriteUrl
+        if let spriteUrlString = spriteUrlString {
+            self.spriteUrl = URL(string: spriteUrlString)
+        } else {
+            self.spriteUrl = URL(string: Self.defaultSprites.item(fromSeed: text))
+        }
     }
 }
 
 extension SpriteLabelView {
+    static let defaultSprites: [String] = [
+        "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/master-ball.png",
+        "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png",
+        "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/great-ball.png",
+        "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/ultra-ball.png",
+        "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/premier-ball.png"
+
+    ]
+    
     static let defaultSpriteUrl: URL? = URL(string: "https://play.pokemonshowdown.com/sprites/trainers/ash.png")
 }
 
 #Preview {
     SpriteLabelView(
-        text: "Some lovely text",
-        spriteUrl: SpriteLabelView.defaultSpriteUrl
+        text: "Some lovely text"
     )
 }

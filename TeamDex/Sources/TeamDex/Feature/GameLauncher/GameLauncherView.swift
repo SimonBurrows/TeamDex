@@ -19,7 +19,8 @@ public struct GameLauncherView: View {
                             players: game.players,
                             profileResolver: game.profileResolver,
                             profileIds: game.profileIds,
-                            senarios: game.senarios
+                            senarios: game.senarios,
+                            sprites: game.sprites
                         )
                     } label: {
                         Text(game.name)
@@ -45,23 +46,40 @@ public struct GameLauncherView: View {
     
     let exampleGames: [Game] = [
         Game(
-name: "Something ace",
-             players:  [
+            name: "Something ace",
+            players:  [
                 "Simon",
                 "Kevin",
                 "Gabby",
                 "Paul",
                 "Carl",
                 "Nick"
-             ],
-             profileIds: (1...150).map(String.init),
-             senarios: [
+            ],
+            profileIds: (1...150).map(String.init),
+            senarios: [
                 Senario(
                     title: "Treasure hunt",
-                    text: "Find sombody of the same type as you"
+                    text: "Find sombody of the same type as you",
                 )
-             ],
-             profileResolver: ProfileResolver(
+            ],
+            sprites: [
+                "https://play.pokemonshowdown.com/sprites/trainers/youngster-gen1.png",
+                "https://play.pokemonshowdown.com/sprites/trainers/youngn.png",
+                "https://play.pokemonshowdown.com/sprites/trainers/youngster-gen1rb.png",
+                "https://play.pokemonshowdown.com/sprites/trainers/youngster-gen2.png",
+                "https://play.pokemonshowdown.com/sprites/trainers/youngster-gen3.png",
+                "https://play.pokemonshowdown.com/sprites/trainers/youngster-gen3rs.png",
+                "https://play.pokemonshowdown.com/sprites/trainers/youngster-gen4.png",
+                "https://play.pokemonshowdown.com/sprites/trainers/youngster-gen4dp.png",
+                "https://play.pokemonshowdown.com/sprites/trainers/youngster-gen6.png",
+                "https://play.pokemonshowdown.com/sprites/trainers/youngster-gen6xy.png",
+                "https://play.pokemonshowdown.com/sprites/trainers/youngster-gen7.png",
+                "https://play.pokemonshowdown.com/sprites/trainers/youngster-gen8.png",
+                "https://play.pokemonshowdown.com/sprites/trainers/youngster-gen9.png",
+                "https://play.pokemonshowdown.com/sprites/trainers/youngster-masters.png",
+                "https://play.pokemonshowdown.com/sprites/trainers/youngster.png",
+            ],
+            profileResolver: ProfileResolver(
                 name: .init(
                     source: 
                             .api(
@@ -83,7 +101,7 @@ name: "Something ace",
                             ),
                     path: "sprites.other.official-artwork.front_default"
                 )
-             )
+            )
         ),
         
         
@@ -111,6 +129,14 @@ name: "Something ace",
                     text: "Can we tun these into a set of hypothesis statements? \nHypothesis statement\nExample: We believe that sharing our roadmap early and often will reduce duplicate efforts and requests from other teams. We will know this is true when duplicate work-streams reduce."
                 )
             ],
+            sprites: [
+                "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/master-ball.png",
+                "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png",
+                "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/great-ball.png",
+                "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/ultra-ball.png",
+                "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/premier-ball.png"
+
+            ],
             profileResolver: ProfileResolver(
                 name: .init(
                     source: .local(data: personaJson),
@@ -124,7 +150,7 @@ name: "Something ace",
                     source: .local(data: personaJson),
                     path: "artworkUrl"
                 )
-            ),
+            )
         )
     ]
 }

@@ -13,6 +13,7 @@ public struct MenuListView: View {
     let players: [String]
     let senarios: [Senario]
     let profileIds: [String]
+    let sprites: [String]?
     
     var filteredItems: [String] {
         if searchText.isEmpty {
@@ -28,20 +29,18 @@ public struct MenuListView: View {
         NavigationStack {
             List {
                 NavigationLink {
-                    // TODO fix hardcoded
                     ProfileLoaderDeckView(profileIds: profileIds, profileFetcher: profileFetcher)
                 } label: {
-                    // TODO sort sprite
-//                    SpriteLabelView(text: "All characters", spriteUrl: nil)
-//                        spriteUrl: profileProvider.defaultProfile().artworkUrl
-                    PokeballLabelView(labelText: "All characters")
+                    let text = "All characters"
+                    SpriteLabelView(text: text, spriteUrlString: sprites?.item(fromSeed: text))
+
                 }
                 NavigationLink {
                     SenarioDeckView(senarios: senarios)
                 } label: {
-                    // TODO sort default
-//                    SpriteLabelView(text: "All senarios", spriteUrl: nil)
-                    PokeballLabelView(labelText: "All senarios")
+                    let text = "All senarios"
+                    SpriteLabelView(text: text, spriteUrlString: sprites?.item(fromSeed: text))
+
                 }
                 
                 Section {
@@ -54,7 +53,7 @@ public struct MenuListView: View {
                             )
                                 .detailBackground()
                         } label: {
-                            PokeballLabelView(labelText: player)
+                            SpriteLabelView(text: player, spriteUrlString: sprites?.item(fromSeed: player))
                         }
                     }
                 }
@@ -63,10 +62,11 @@ public struct MenuListView: View {
         }
     }
     
-    public init(players: [String], profileResolver: ProfileResolver, profileIds: [String], senarios: [Senario]) {
+    public init(players: [String], profileResolver: ProfileResolver, profileIds: [String], senarios: [Senario], sprites: [String]? = nil) {
         self.players = players
         self.senarios = senarios
         profileFetcher = ProfileFetcher(profileResolver: profileResolver)
         self.profileIds = profileIds
+        self.sprites = sprites
     }
 }
