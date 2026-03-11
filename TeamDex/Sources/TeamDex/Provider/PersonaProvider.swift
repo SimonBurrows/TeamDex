@@ -6,8 +6,16 @@
 //
 
 public struct PersonaProvider: ProfileProviderProtocol {
+    public func defaultProfile() -> any Profile {
+        Self.data.item(fromSeed: "default")
+    }
+    
     public func profile(fromSeed seed: String) -> Profile {
         Self.data.item(fromSeed: seed)
+    }
+    
+    public func allProfiles() -> [Profile] {
+        Self.data
     }
     
     public init() {}

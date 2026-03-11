@@ -11,13 +11,13 @@ public struct MenuListView: View {
     @State private var searchText = ""
     
     let profileProvider: ProfileProviderProtocol
-    let items: [String]
+    let players: [String]
     
     var filteredItems: [String] {
         if searchText.isEmpty {
-            items
+            players
         } else {
-            items.filter {
+            players.filter {
                 $0.localizedCaseInsensitiveContains(searchText)
             }
         }
@@ -26,15 +26,23 @@ public struct MenuListView: View {
     public var body: some View {
         NavigationStack {
             List {
-                ForEach(filteredItems, id: \.self) { item in
-                    let profile = profileProvider.profile(fromSeed: item)
-                    NavigationLink {
-                        ProfileView(profile: profile).detailBackground()
-                    } label: {
-                        ProfileSpriteLabelView(
-                            text: item,
-                            profile: profile
-                        )
+                NavigationLink {
+                    ProfileDeckView(profileProvider: profileProvider)
+                } label: {
+                    SpriteLabelView(text: "All characters", spriteUrl: profileProvider.defaultProfile().artworkUrl)
+                }
+                
+                Section {
+                    ForEach(filteredItems, id: \.self) { item in
+                        let profile = profileProvider.profile(fromSeed: item)
+                        NavigationLink {
+                            ProfileView(profile: profile).detailBackground()
+                        } label: {
+                            ProfileSpriteLabelView(
+                                text: item,
+                                profile: profile
+                            )
+                        }
                     }
                 }
             }.navigationTitle("TeamDex")
@@ -42,14 +50,14 @@ public struct MenuListView: View {
         }
     }
     
-    public init(items: [String], profileProvider: ProfileProviderProtocol) {
-        self.items = items
+    public init(players: [String], profileProvider: ProfileProviderProtocol) {
+        self.players = players
         self.profileProvider = profileProvider
     }
 }
 
 #Preview {
-    MenuListView(items:  [
+    MenuListView(players:  [
         "Simon",
         "Kevin",
         "Gabby",

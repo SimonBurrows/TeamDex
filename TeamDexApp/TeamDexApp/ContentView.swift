@@ -11,7 +11,7 @@ import TeamDex
 struct ContentView: View {
     var body: some View {
         VStack {
-            MenuListView(items: [
+            MenuListView(players: [
                 "Simon",
                 "Kevin",
                 "Gabby",

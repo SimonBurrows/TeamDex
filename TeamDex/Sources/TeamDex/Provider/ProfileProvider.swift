@@ -6,5 +6,7 @@
 //
 
 public protocol ProfileProviderProtocol {
+    func defaultProfile() -> Profile
     func profile(fromSeed seed: String) -> Profile
+    func allProfiles() -> [Profile]
 }
