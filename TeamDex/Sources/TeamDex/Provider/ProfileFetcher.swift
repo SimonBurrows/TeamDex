@@ -15,9 +15,20 @@ struct ProfileFetcher: ProfileFetcherProtocol {
     public func fetchProfile(withId profileId: String) async -> Result<any Profile, FetchError> {
         do {
             let profile = await DynamicProfile(
-                name: try stringValue(fromResolverEntry: profileResolver.name, profileId: profileId),
-                artworkUrl: try URL(string: stringValue(fromResolverEntry: profileResolver.artworkUrl, profileId: profileId)),
-                bio: try stringValue(fromResolverEntry: profileResolver.bio, profileId: profileId)
+                name: try stringValue(
+                    fromResolverEntry: profileResolver.name,
+                    profileId: profileId
+                ),
+                artworkUrl: try URL(
+                    string: stringValue(
+                        fromResolverEntry: profileResolver.artworkUrl,
+                        profileId: profileId
+                    )
+                ),
+                bio: try stringValue(
+                    fromResolverEntry: profileResolver.bio,
+                    profileId: profileId
+                )
             )
             
             return .success(profile)
@@ -111,8 +122,50 @@ public struct ProfileResolver: Sendable, Codable {
         let path: String
     }
     
-    enum Source : Codable{
+    enum Source : Codable{        
         case local(json: String)
         case api(urlTemplate: String)
+
+        enum CodingKeys: String, CodingKey {
+            case type
+            case json
+            case urlTemplate
+        }
+
+        enum Kind: String, Codable {
+            case local
+            case api
+        }
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            let type = try container.decode(Kind.self, forKey: .type)
+
+            switch type {
+            case .local:
+                let json = try container.decode(String.self, forKey: .json)
+                self = .local(json: json)
+            case .api:
+                let urlTemplate = try container.decode(
+                    String.self,
+                    forKey: .urlTemplate
+                )
+                self = .api(urlTemplate: urlTemplate)
+            }
+        }
+
+        func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+
+            switch self {
+            case .local(let json):
+                try container.encode(Kind.local, forKey: .type)
+                try container.encode(json, forKey: .json)
+
+            case .api(let urlTemplate):
+                try container.encode(Kind.api, forKey: .type)
+                try container.encode(urlTemplate, forKey: .urlTemplate)
+            }
+        }
     }
 }

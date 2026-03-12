@@ -6,42 +6,62 @@
 //
 
 import Foundation
-import Compression
+import zlib
 
 extension Data {
     func decompressedZlib() throws -> Data {
-        let destinationBufferSize = 64 * 1024
+        guard !isEmpty else { return Data() }
 
-        return try withUnsafeBytes { sourceBuffer in
-            guard let sourcePointer = sourceBuffer.bindMemory(to: UInt8.self).baseAddress else {
+        var stream = z_stream()
+        var status: Int32
+
+        status = inflateInit_(
+            &stream,
+            ZLIB_VERSION,
+            Int32(MemoryLayout<z_stream>.size)
+        )
+
+        guard status == Z_OK else {
+            throw FetchError.decodeError
+        }
+
+        defer {
+            inflateEnd(&stream)
+        }
+
+        return try withUnsafeBytes { rawBuffer in
+            guard let baseAddress = rawBuffer.bindMemory(to: Bytef.self).baseAddress else {
                 throw FetchError.decodeError
             }
 
+            stream.next_in = UnsafeMutablePointer(mutating: baseAddress)
+            stream.avail_in = uInt(count)
+
+            let chunkSize = 16_384
             var output = Data()
-            var sourceSize = count
-            var sourceOffset = 0
+            var buffer = [UInt8](repeating: 0, count: chunkSize)
 
             repeat {
-                var destinationBuffer = [UInt8](repeating: 0, count: destinationBufferSize)
-
-                let decodedSize = compression_decode_buffer(
-                    &destinationBuffer,
-                    destinationBufferSize,
-                    sourcePointer.advanced(by: sourceOffset),
-                    sourceSize,
-                    nil,
-                    COMPRESSION_ZLIB
-                )
-
-                guard decodedSize > 0 else {
-                    throw FetchError.decodeError
+                status = buffer.withUnsafeMutableBufferPointer { bufferPointer in
+                    stream.next_out = bufferPointer.baseAddress
+                    stream.avail_out = uInt(bufferPointer.count)
+                    return inflate(&stream, Z_NO_FLUSH)
                 }
 
-                output.append(destinationBuffer, count: decodedSize)
+                guard status == Z_OK || status == Z_STREAM_END else {
+                    throw FetchError.decodeError// TODO change error type
+                }
 
-                sourceOffset += sourceSize
-                sourceSize = 0
-            } while false
+                let bytesWritten = chunkSize - Int(stream.avail_out)
+                if bytesWritten > 0 {
+                    output.append(buffer, count: bytesWritten)
+                }
+
+            } while status != Z_STREAM_END
+
+            if status != Z_STREAM_END {
+                throw FetchError.decodeError
+            }
 
             return output
         }
