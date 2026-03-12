@@ -22,6 +22,8 @@ public struct GameLauncherView: View {
                     ForEach(Self.exampleGames, id: \.name) { game in
                         NavigationLink {
                             MenuListView(
+                                // TODO just pass through game instead
+                                gameName: game.name,
                                 players: game.players,
                                 profileResolver: game.profileResolver,
                                 profileIds: game.profileIds,
@@ -46,6 +48,7 @@ public struct GameLauncherView: View {
                     ForEach(games, id: \.name) { game in
                         NavigationLink {
                             MenuListView(
+                                gameName: game.name,
                                 players: game.players,
                                 profileResolver: game.profileResolver,
                                 profileIds: game.profileIds,

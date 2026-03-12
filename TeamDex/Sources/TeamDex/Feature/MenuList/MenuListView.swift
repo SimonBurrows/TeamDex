@@ -9,6 +9,7 @@ import SwiftUI
 
 public struct MenuListView: View {
     @State private var searchText = ""
+    let gameName: String
     let profileFetcher: ProfileFetcherProtocol
     let players: [String]
     let senarios: [Senario]
@@ -57,12 +58,13 @@ public struct MenuListView: View {
                         }
                     }
                 }
-            }.navigationTitle("TeamDex")
+            }.navigationTitle(gameName)
                 .searchable(text: $searchText, prompt: "Search name")
         }
     }
     
-    public init(players: [String], profileResolver: ProfileResolver, profileIds: [String], senarios: [Senario], sprites: [String]? = nil) {
+    public init(gameName: String, players: [String], profileResolver: ProfileResolver, profileIds: [String], senarios: [Senario], sprites: [String]? = nil) {
+        self.gameName = gameName
         self.players = players
         self.senarios = senarios
         profileFetcher = ProfileFetcher(profileResolver: profileResolver)
