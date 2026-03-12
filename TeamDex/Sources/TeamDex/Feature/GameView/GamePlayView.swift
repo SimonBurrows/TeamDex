@@ -17,10 +17,7 @@ struct GamePlayView: View {
         VStack {
             VStack {
                 TabView {
-                    ProfileLoaderView(profileFetcher: profileFetcher, profileId: profileId)
-                    ForEach(senarios, id: \.self.title) { senario in
-                        SenarioView(senario: senario)
-                    }
+                    GameLoaderView(profileFetcher: profileFetcher, profileId: profileId, senarios: senarios)
                 }
                 .tabViewStyle(.page)
             }

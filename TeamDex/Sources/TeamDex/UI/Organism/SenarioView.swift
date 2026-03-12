@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SenarioView: View {
     let senario: Senario
+    let artworkUrl: URL?
 
     var body: some View {
         ZStack {
@@ -20,6 +21,19 @@ struct SenarioView: View {
                     .padding(.top, 16)
 
                 Spacer()
+                if let artworkUrl {
+                    AsyncImage(url: artworkUrl) { image in
+                        image
+                            .resizable()
+                            .interpolation(.none)
+                            .aspectRatio(contentMode: .fit)
+                            .frame(maxHeight: 260)
+                            .shadow(radius: 4, y: 3)
+                    } placeholder: {
+                        ProgressView()
+                            .frame(height: 260)
+                    }
+                }
 
                 // Dialogue box
                 DialogBox(text: senario.text)
@@ -27,6 +41,11 @@ struct SenarioView: View {
                     .padding(.bottom, 24)
             }
         }
+    }
+    
+    init(senario: Senario, artworkUrl: URL? = nil) {
+        self.senario = senario
+        self.artworkUrl = artworkUrl
     }
 }
 
