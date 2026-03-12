@@ -86,6 +86,8 @@ public struct GameLauncherView: View {
         }
     }
     
+    public init() {}
+    
     func decodeGame(from scanned: String) throws -> Game {
        
         let cleaned = scanned.trimmingCharacters(in: .whitespacesAndNewlines)
