@@ -139,15 +139,15 @@ public struct GameLauncherView: View {
             ],
             profileResolver: ProfileResolver(
                 name: .init(
-                    source: .local(data: personaJson),
+                    source: .local(json: personaJson),
                     path: "name"
                 ),
                 bio: .init(
-                    source: .local(data: personaJson),
+                    source: .local(json: personaJson),
                     path: "bio"
                 ),
                 artworkUrl: .init(
-                    source: .local(data: personaJson),
+                    source: .local(json: personaJson),
                     path: "artworkUrl"
                 )
             )
@@ -173,5 +173,5 @@ extension GameLauncherView {
         "bio": "I'm a backend engineer..."
       }
     ]
-    """.data(using: .utf8)!
+    """//.data(using: .utf8)!
 }

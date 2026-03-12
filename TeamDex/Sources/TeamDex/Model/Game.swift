@@ -6,7 +6,7 @@
 //
 
 // TODO extract to model
-struct Game {
+struct Game: Codable {
     let name: String
     let players: [String]
     let profileIds: [String]

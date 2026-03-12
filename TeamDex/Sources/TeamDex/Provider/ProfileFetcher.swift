@@ -54,6 +54,13 @@ struct ProfileFetcher: ProfileFetcherProtocol {
         }
     }
 
+    func decodeJSON(from json: String) throws -> JSONValue {
+        guard let data = json.data(using: .utf8) else {
+            throw FetchError.decodeError
+        }
+        return try decodeJSON(from: data)
+    }
+    
     func decodeJSON(from data: Data) throws -> JSONValue {
         do {
             return try decoder.decode(JSONValue.self, from: data)
@@ -64,10 +71,9 @@ struct ProfileFetcher: ProfileFetcherProtocol {
 
     func stringValue(fromResolverEntry entry: ProfileResolver.Entry, profileId: String) async throws -> String {
         switch entry.source {
-        case .local(data: let data):
-            return try decodeJSON(from: data).value(
+        case .local(json: let json):
+            return try decodeJSON(from: json).value(
                 // TODO tidy up logic here!
-                // Note, - is hardcoded but needs to be passed in
                 at: "\(profileId).\(entry.path)"
             )?.stringValue ?? ""
         case .api(urlTemplate: let urlTemplate):
@@ -95,18 +101,18 @@ struct ProfileFetcher: ProfileFetcherProtocol {
 }
 
 
-public struct ProfileResolver: Sendable {
+public struct ProfileResolver: Sendable, Codable {
     let name: Entry
     let bio: Entry
     let artworkUrl: Entry
     
-    struct Entry {
+    struct Entry: Codable {
         let source: Source
         let path: String
     }
     
-    enum Source {
-        case local(data: Data)
+    enum Source : Codable{
+        case local(json: String)
         case api(urlTemplate: String)
     }
 }
