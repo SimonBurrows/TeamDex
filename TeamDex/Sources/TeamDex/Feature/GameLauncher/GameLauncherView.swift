@@ -10,7 +10,7 @@ import VisionKit
 
 // TODO break this up
 public struct GameLauncherView: View {
-    @State private var games: [Game]
+    @State private var games: [Game] = []
     @State private var showingScanner = false
     @State private var scanError: String?
     @State private var scannedGame: Game?
@@ -18,6 +18,22 @@ public struct GameLauncherView: View {
     public var body: some View {
         NavigationStack {
             List {
+                Section("Example Games") {
+                    ForEach(Self.exampleGames, id: \.name) { game in
+                        NavigationLink {
+                            MenuListView(
+                                players: game.players,
+                                profileResolver: game.profileResolver,
+                                profileIds: game.profileIds,
+                                senarios: game.senarios,
+                                sprites: game.sprites
+                            )
+                        } label: {
+                            Text(game.name)
+                        }
+                    }
+                }
+                
                 Section {
                     Button {
                         showingScanner = true
@@ -26,7 +42,7 @@ public struct GameLauncherView: View {
                     }
                 }
 
-                Section("Example Games") {
+                Section("Installed Games") {
                     ForEach(games, id: \.name) { game in
                         NavigationLink {
                             MenuListView(
@@ -67,19 +83,6 @@ public struct GameLauncherView: View {
             } message: {
                 Text(scanError ?? "")
             }
-        }
-    }
-    
-    
-
-    // TODO get this out of view
-    public init() {
-        do {
-            let data = Data(Self.exampleGameJson.utf8)
-            _games = State(initialValue: try JSONDecoder().decode([Game].self, from: data))
-        } catch {
-            print("Failed to decode games:", error)
-            _games = State(initialValue: [])
         }
     }
     
