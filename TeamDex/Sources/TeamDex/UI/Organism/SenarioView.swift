@@ -34,6 +34,7 @@ struct SenarioView: View {
                             .frame(height: 260)
                     }
                 }
+                Spacer()
 
                 // Dialogue box
                 DialogBox(text: senario.text)

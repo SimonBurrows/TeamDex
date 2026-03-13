@@ -25,7 +25,7 @@ struct DialogBox: View {
 
             // Text
             Text(text)
-                .font(PackageFont.pokemonClasic.font(size: 12))
+                .font(PackageFont.pokemonClasic.font(size: 16))
                 .font(.system(size: 18, weight: .semibold, design: .monospaced)) // “gamey” without custom fonts
                 .foregroundStyle(Color.black.opacity(0.9))
                 .lineSpacing(3)

@@ -60,7 +60,7 @@ struct QRCodeView: View {
 
 #Preview {
     QRCodeView(
-        payload: ExampleQRCodes.proffessorOaksTeamMixer
+        payload: ExampleQRCodes.fireAtTheOffice
     )
 }
 
@@ -99,4 +99,6 @@ enum ExampleQRCodes {
 //    Now come up with the most fun one you can using the pokemon api
     
     static let proffessorOaksTeamMixer = "eNq1UsGO0zAQ/RXLErfdpAkssL3ACbSVEAgt4rCgyk0mjanjiexJ06jqvzPjRuxWyxEO40ns9948j+eovelAL/UX3P0YFgu47dCrT/YAQV/p3pkJQtTLB70y1Y53OOEm5Q7iOVtIOaI/5z5RV2aSFYzXP1koYGMd3NVJq+CTkuMlxyuOG47XHG843nLcchQLWQRZCLQQbCHgQtCFwAvBF0IohFEKo0zawiiFUQqjvBELEbwJFsXAUZMl9+zWd54CMp7gQHyWfuuhAjXhECK4RsHBVOQmZWLaUxf0EQdXZ/p09Sj/cerUPZjuUfSD9bWiEdXcWjW2GOEvQqrB0CmjtixBLKFGS+3ZyWWNz01j2eMqPctc5XtrSP3CzSz13Gtr9qAYM2LYvdMnaU8fLEF6npaoj8s8F4tZjztgRmxxrHH0WYVdPmNzCsZ6vkTOBfw2EoSs99sn7/0VIro9z8PyOM/ZUUc2U6Uvmnq5gOktOx+Cu4eOS5Ls/bHA1fmcq+ac8n2Zz36uecwqyx5evOdu6N5Qy7RUg383Fv93qcaZPYa1NHwNPCkMyBbZk13BmkDS4W/B/Ts7lzbmp8iQWu4+yixY467nwlkT0NO6hsYMjh2dTr8Bg+tI5w=="
+    
+    static let fireAtTheOffice = "eNrtlE1P20AQhv/KaC+9QNJCpUqRKkQJqFChtpCqB8Jh7B07C+tdd2dNsKL89846KfmQ2gP0gpSDE3tnPM87s+96phxWpAbqzAQCjBAnBF+LwuSk9lRtsaXAanCjji09ysqFDxqd3FxjJb8jbK0PcnOCTK38X/pQdvErY7uFC6wMqVupFXwha+e6K/dWQu/kOpDrUK73KYXJYTA+JcxUNNEmYd+C100ejXcw9NNUOtJjlMAlGgf1Igq+KKxx1IMh5UYTFCZwaiaQdNW9zdD6JkDwliDiPTFEr7HtqfneCnbsytDCScPRVxTWWXc+QL5c7+piJJdqgCV8EPDPiUxPe1rnaA+iMY3USR2YSOBog3cmZRoZ/JBQJ/0r4p9IJUzgiakXciFrIhh2byKIBN0uuTGgpn0ZwrYCbsqSOG5SrylvgoktyKaGuGI+rRvmRtQbzv0DBdJ/7S6jwotIclp2AETfJmhEWMGJd7I3+RpnNPUQJcSQWXEfEOYT8DKmAFIOEAo0VprvwWc/3aZWIimlTTFooSXb1CKaOltNYqx50O9jbXpaPJwRhl7uq/6H3mO/No9k9zHEfu3KIybSHxcGT0Z83psHz37zcO1MXBF7K4NWg9nyOM4US8N5dxfbOs3S+hyt4O7YO3m8mY273LEajNUnzO/THpy6UkxEYaz2xiozfhFsjNUMKPFC1DAwhQfRyb0uTbRNfbj/EWyX/c9uMh9j5FUr2YI7Tpu+Jmd5ZOESHZZbar7JAZftMixCEvflIpafgG0RQ2JTui36eSXZD4JuGDNjxesv5+sn0KaA66vTDfYXolqG33IkcT5HzCy9nM6BtsHfj2EkZ36r9TPjxAXpW5Q15X/Y+18o3FtBqxrjRBzZOVceBbgz8M7Ar8/AybjytKq5s/HOxq/Pxmv+nc/nvwH23xmb"
 }

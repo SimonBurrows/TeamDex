@@ -39,7 +39,7 @@ public struct MenuListView: View {
                 NavigationLink {
                     SenarioDeckView(senarios: senarios)
                 } label: {
-                    let text = "All senarios"
+                    let text = "All scenarios"
                     SpriteLabelView(text: text, spriteUrlString: sprites?.item(fromSeed: text))
 
                 }
